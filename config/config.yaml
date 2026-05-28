@@ -1,0 +1,127 @@
+# What you're looking for. Edit this to taste.
+
+search:
+  # Keywords that must appear in the job title (case-insensitive).
+  # A job matches if ANY of these phrases is in the title.
+  title_keywords:
+    - "paid search"
+    - "paid media"
+    - "performance marketing"
+    - "digital marketing manager"
+    - "growth marketing"
+    - "marketing manager"
+    - "senior manager"
+    - "search marketing"
+    - "sem"
+
+  # Optional: if non-empty, the title must ALSO contain at least one of these.
+  # Useful for narrowing seniority. Leave empty to skip.
+  seniority_keywords:
+    - "senior"
+    - "sr."
+    - "manager"
+    - "lead"
+    - "principal"
+    - "staff"
+
+  # Locations to search. JobSpy uses these as query parameters on LinkedIn/Indeed.
+  locations:
+    - "Austin, TX"
+    - "Remote"
+
+  # Hard location filter applied to ALL sources (including ATS career pages).
+  # A job's location field must contain at least one of these substrings
+  # (case-insensitive) or the job is dropped. Leave empty to skip the filter.
+  # "remote" also matches phrases like "Remote - US", "Fully remote", etc.
+  allowed_locations:
+    - "austin"
+    - "remote"
+    - "tx"     # catches "Austin, TX" variants and stray "TX - Remote" listings
+
+  # How far back to look on first run. After that, dedupe takes over.
+  hours_old: 24
+
+  # Hard exclusions. If any of these appear in the title, skip the job.
+  title_blocklist:
+    - "intern"
+    - "internship"
+    - "entry level"
+    - "junior"
+    - "associate"
+    - "coordinator"
+    - "assistant"
+
+# LinkedIn + Indeed scraping via JobSpy
+jobspy:
+  enabled: true
+  sites: ["linkedin", "indeed"]
+  results_wanted: 50  # per site, per location
+
+# Direct company career page polling. Add companies you actually care about.
+# Each entry needs the ATS platform and the company's board slug.
+#
+# How to find the slug:
+#   Greenhouse: boards.greenhouse.io/<slug>           e.g. boards.greenhouse.io/stripe -> "stripe"
+#   Lever:      jobs.lever.co/<slug>                  e.g. jobs.lever.co/netflix       -> "netflix"
+#   Ashby:      jobs.ashbyhq.com/<slug>               e.g. jobs.ashbyhq.com/notion     -> "notion"
+#
+# If a slug doesn't work, the scraper logs an error and skips it without
+# breaking the run. Test new additions by checking that the public URL loads
+# in a browser first.
+companies:
+  # --- Originals ---
+  - { name: "Ownwell",      ats: "ashby",      slug: "ownwell" }
+  - { name: "Stripe",       ats: "greenhouse", slug: "stripe" }
+  - { name: "Zillow",       ats: "greenhouse", slug: "zillowgroup" }
+  - { name: "Tesla",        ats: "greenhouse", slug: "tesla" }
+
+  # --- Austin tech ---
+  - { name: "Indeed",       ats: "greenhouse", slug: "indeed" }
+  - { name: "Cloudflare",   ats: "greenhouse", slug: "cloudflare" }
+  - { name: "Atlassian",    ats: "greenhouse", slug: "atlassian" }
+  - { name: "HubSpot",      ats: "greenhouse", slug: "hubspot" }
+  - { name: "Workrise",     ats: "greenhouse", slug: "workrise" }
+  - { name: "Self Financial", ats: "greenhouse", slug: "selffinancial" }
+  - { name: "AlertMedia",   ats: "greenhouse", slug: "alertmedia" }
+  - { name: "Khoros",       ats: "greenhouse", slug: "khoros" }
+  - { name: "Iodine Software", ats: "greenhouse", slug: "iodinesoftware" }
+  - { name: "Bumble",       ats: "greenhouse", slug: "bumble" }
+  - { name: "Cart.com",     ats: "greenhouse", slug: "cartcom" }
+
+  # --- Multifamily / proptech (your domain) ---
+  - { name: "Opendoor",     ats: "greenhouse", slug: "opendoor" }
+  - { name: "Redfin",       ats: "greenhouse", slug: "redfin" }
+  - { name: "Compass",      ats: "greenhouse", slug: "urbancompass" }
+  - { name: "RealPage",     ats: "greenhouse", slug: "realpage" }
+  - { name: "Roofstock",    ats: "greenhouse", slug: "roofstock" }
+  - { name: "Divvy Homes",  ats: "greenhouse", slug: "divvyhomes" }
+  - { name: "Sundae",       ats: "greenhouse", slug: "sundae" }
+  - { name: "Pacaso",       ats: "greenhouse", slug: "pacaso" }
+  - { name: "Side",         ats: "greenhouse", slug: "side" }
+
+  # --- Big tech ---
+  - { name: "Airbnb",       ats: "greenhouse", slug: "airbnb" }
+  - { name: "DoorDash",     ats: "greenhouse", slug: "doordash" }
+  - { name: "Instacart",    ats: "greenhouse", slug: "instacart" }
+  - { name: "Lyft",         ats: "greenhouse", slug: "lyft" }
+  - { name: "Pinterest",    ats: "greenhouse", slug: "pinterest" }
+  - { name: "Reddit",       ats: "greenhouse", slug: "reddit" }
+  - { name: "Snap",         ats: "greenhouse", slug: "snapinc" }
+  - { name: "Robinhood",    ats: "greenhouse", slug: "robinhood" }
+  - { name: "Coinbase",     ats: "greenhouse", slug: "coinbase" }
+  - { name: "Brex",         ats: "ashby",      slug: "brex" }
+  - { name: "Ramp",         ats: "ashby",      slug: "ramp" }
+  - { name: "Notion",       ats: "ashby",      slug: "notion" }
+  - { name: "Linear",       ats: "ashby",      slug: "linear" }
+  - { name: "Vercel",       ats: "greenhouse", slug: "vercel" }
+  - { name: "Anthropic",    ats: "greenhouse", slug: "anthropic" }
+  - { name: "OpenAI",       ats: "ashby",      slug: "openai" }
+  - { name: "Figma",        ats: "ashby",      slug: "figma" }
+  - { name: "Netflix",      ats: "lever",      slug: "netflix" }
+  - { name: "Spotify",      ats: "lever",      slug: "spotify" }
+  - { name: "Shopify",      ats: "lever",      slug: "shopify" }
+
+# Notification settings. The webhook URL itself lives in a secret, not here.
+notifications:
+  # Max number of new jobs sent in a single Discord message (Discord limits embeds per message).
+  batch_size: 10
